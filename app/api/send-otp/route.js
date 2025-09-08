@@ -37,7 +37,6 @@ export async function POST(req) {
     const db = client.db("seafooddb");
     const otpCollection = db.collection("otp_verifications");
 
-    // Save OTP info to MongoDB
     await otpCollection.updateOne(
       { email },
       { $set: { name, email, password, otp, expiresAt } },
