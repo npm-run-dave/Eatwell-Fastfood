@@ -47,7 +47,6 @@ export default function Banner() {
       <Slider {...settings}>
         {slides.map((slide) => (
           <div key={slide.id} className="relative w-full h-screen">
-            {/* Background image */}
             <Image
               src={slide.image}
               alt={slide.title}
@@ -56,10 +55,8 @@ export default function Banner() {
               className="object-cover brightness-75"
             />
 
-            {/* 🔥 Bottom gradient overlay */}
             <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-red-900/70 via-orange-800/50 to-transparent pointer-events-none" />
 
-            {/* Overlay content */}
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 sm:px-6 md:px-8">
               <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold drop-shadow-lg">
                 {slide.title}

@@ -4,6 +4,8 @@ const nextConfig = {
     domains: [
       "www.foxyfolksy.com",
       "www.licious.in",
+      "platform-lookaside.fbsbx.com", // Facebook
+      "lh3.googleusercontent.com",     // Google
     ],
   },
 };
