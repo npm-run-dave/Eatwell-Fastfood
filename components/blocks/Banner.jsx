@@ -1,12 +1,34 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Slider from "react-slick";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+import Login from "../blocks/Login";
 
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 export default function Banner() {
+  const { data: session } = useSession();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [animateModal, setAnimateModal] = useState(false);
+
+  // Close modal automatically after login
+  useEffect(() => {
+    if (session) {
+      setAnimateModal(false); // trigger fade-out
+      setTimeout(() => setShowLoginModal(false), 300); // hide after animation
+    }
+  }, [session]);
+
+  // Trigger fade-in animation
+  useEffect(() => {
+    if (showLoginModal) {
+      setAnimateModal(true);
+    }
+  }, [showLoginModal]);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -42,6 +64,14 @@ export default function Banner() {
     },
   ];
 
+  const handleOrderClick = () => {
+    if (!session) {
+      setShowLoginModal(true);
+    } else {
+      console.log("Show menu here or open menu modal");
+    }
+  };
+
   return (
     <section className="relative w-full h-screen overflow-hidden">
       <Slider {...settings}>
@@ -64,13 +94,38 @@ export default function Banner() {
               <p className="mt-3 sm:mt-4 text-base sm:text-lg md:text-2xl max-w-lg md:max-w-3xl drop-shadow-md">
                 {slide.desc}
               </p>
-              <button className="mt-5 sm:mt-6 px-5 py-3 sm:px-6 sm:py-3 md:px-8 md:py-4 bg-gradient-to-r from-red-800 via-red-700 to-yellow-900 hover:from-red-900 hover:via-red-800 hover:to-yellow-800 rounded-lg text-white text-sm sm:text-base md:text-lg font-semibold shadow-lg transition">
+              <button
+                onClick={handleOrderClick}
+                className="mt-5 sm:mt-6 px-5 py-3 sm:px-6 sm:py-3 md:px-8 md:py-4 bg-gradient-to-r from-red-800 via-red-700 to-yellow-900 hover:from-red-900 hover:via-red-800 hover:to-yellow-800 rounded-lg text-white text-sm sm:text-base md:text-lg font-semibold shadow-lg transition"
+              >
                 Order Now
               </button>
             </div>
           </div>
         ))}
       </Slider>
+
+      {showLoginModal && !session && (
+        <div
+          className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-opacity duration-300 ${
+            animateModal ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <div
+            className={`bg-white rounded-2xl shadow-2xl p-6 sm:p-10 w-full max-w-md relative h-[450px] translate-y-[-150px] transform transition-all duration-300 ${
+              animateModal ? "scale-100 opacity-100" : "scale-90 opacity-0"
+            }`}
+          >
+            <button
+              onClick={() => setShowLoginModal(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 font-bold"
+            >
+              ×
+            </button>
+            <Login />
+          </div>
+        </div>
+      )}
     </section>
   );
 }
