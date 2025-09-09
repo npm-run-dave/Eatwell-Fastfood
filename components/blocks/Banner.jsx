@@ -11,22 +11,41 @@ import "slick-carousel/slick/slick-theme.css";
 
 export default function Banner() {
   const { data: session } = useSession();
+  const [localUser, setLocalUser] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [animateModal, setAnimateModal] = useState(false);
 
+  const defaultAvatar = "/images/default-avatar.png";
+
+  // Load manual user from localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) setLocalUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  // Listen for localStorage changes (so avatar updates automatically)
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) setLocalUser(JSON.parse(storedUser));
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
+
   // Close modal automatically after login
   useEffect(() => {
-    if (session) {
-      setAnimateModal(false); // trigger fade-out
-      setTimeout(() => setShowLoginModal(false), 300); // hide after animation
+    if (session || localUser) {
+      setAnimateModal(false);
+      setTimeout(() => setShowLoginModal(false), 300);
     }
-  }, [session]);
+  }, [session, localUser]);
 
   // Trigger fade-in animation
   useEffect(() => {
-    if (showLoginModal) {
-      setAnimateModal(true);
-    }
+    if (showLoginModal) setAnimateModal(true);
   }, [showLoginModal]);
 
   const settings = {
@@ -65,12 +84,16 @@ export default function Banner() {
   ];
 
   const handleOrderClick = () => {
-    if (!session) {
+    if (!session && !localUser) {
       setShowLoginModal(true);
     } else {
-      console.log("Show menu here or open menu modal");
+      console.log("Show menu here or redirect to /Menus");
     }
   };
+
+  // Decide avatar + name
+  const avatar = session?.user?.image || localUser?.image || defaultAvatar;
+  const displayName = session?.user?.name || localUser?.name || "User";
 
   return (
     <section className="relative w-full h-screen overflow-hidden">
@@ -94,18 +117,36 @@ export default function Banner() {
               <p className="mt-3 sm:mt-4 text-base sm:text-lg md:text-2xl max-w-lg md:max-w-3xl drop-shadow-md">
                 {slide.desc}
               </p>
+
               <button
                 onClick={handleOrderClick}
                 className="mt-5 sm:mt-6 px-5 py-3 sm:px-6 sm:py-3 md:px-8 md:py-4 bg-gradient-to-r from-red-800 via-red-700 to-yellow-900 hover:from-red-900 hover:via-red-800 hover:to-yellow-800 rounded-lg text-white text-sm sm:text-base md:text-lg font-semibold shadow-lg transition"
               >
                 Order Now
               </button>
+
+              {/* Show avatar + name if logged in */}
+              {(session || localUser) && (
+                <div className="mt-6 flex flex-col items-center">
+                  <Image
+                    src={avatar}
+                    alt="profile"
+                    width={48}
+                    height={48}
+                    className="w-12 h-12 rounded-full border-2 border-white shadow-md object-cover"
+                  />
+                  <span className="mt-2 text-sm font-medium">
+                    {displayName}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
         ))}
       </Slider>
 
-      {showLoginModal && !session && (
+      {/* Login Modal */}
+      {showLoginModal && !session && !localUser && (
         <div
           className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 transition-opacity duration-300 ${
             animateModal ? "opacity-100" : "opacity-0"
@@ -122,7 +163,7 @@ export default function Banner() {
             >
               ×
             </button>
-            <Login />
+            <Login onLoginSuccess={(user) => setLocalUser(user)} />
           </div>
         </div>
       )}

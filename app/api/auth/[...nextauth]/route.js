@@ -1,4 +1,3 @@
-// app/api/auth/[...nextauth]/route.js
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
@@ -16,12 +15,22 @@ const handler = NextAuth({
   ],
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, account }) {
-      if (account) token.provider = account.provider;
+    async jwt({ token, account, profile }) {
+      if (account) {
+        token.provider = account.provider;
+        token.picture = profile?.picture || profile?.image || null;
+        token.name = profile?.name || token.name;
+        token.email = profile?.email || token.email;
+      }
       return token;
     },
     async session({ session, token }) {
-      if (token) session.user.provider = token.provider;
+      if (token) {
+        session.user.provider = token.provider || "credentials";
+        session.user.picture = token.picture || session.user.image || null;
+        session.user.name = token.name || session.user.name;
+        session.user.email = token.email || session.user.email;
+      }
       return session;
     },
   },
