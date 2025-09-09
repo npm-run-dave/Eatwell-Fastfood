@@ -14,7 +14,7 @@ export default function Header() {
   const defaultAvatar = "/images/default-avatar.png"; // put this in public/images/
 
   return (
-    <header className="bg-[#7A0C0C] text-white shadow-md sticky top-0 z-50">
+    <header className="bg-gradient-to-r from-[#020202] to-[#3C2424] text-white shadow-md sticky top-0 z-50">
       <nav className="container mx-auto flex justify-between items-center py-3 px-6 md:px-8">
         {/* Logo */}
         <Link href="/" className="flex items-center">
@@ -30,16 +30,24 @@ export default function Header() {
         {/* Desktop Nav */}
         <ul className="hidden md:flex space-x-8 text-base font-medium items-center">
           <li>
-            <Link href="/menu" className="hover:text-[#FFA500] transition">Menu</Link>
+            <Link href="/menu" className="hover:text-[#FFA500] transition">
+              Menu
+            </Link>
           </li>
           <li>
-            <Link href="/specials" className="hover:text-[#FFA500] transition">Specials</Link>
+            <Link href="/specials" className="hover:text-[#FFA500] transition">
+              Specials
+            </Link>
           </li>
           <li>
-            <Link href="/about" className="hover:text-[#FFA500] transition">About Us</Link>
+            <Link href="/about" className="hover:text-[#FFA500] transition">
+              About Us
+            </Link>
           </li>
           <li>
-            <Link href="/contact" className="hover:text-[#FFA500] transition">Contact</Link>
+            <Link href="/contact" className="hover:text-[#FFA500] transition">
+              Contact
+            </Link>
           </li>
 
           {/* User Avatar + Dropdown */}
@@ -55,7 +63,7 @@ export default function Header() {
                 />
               </button>
 
-              <div className="absolute right-0 mt-2 hidden group-hover:block w-40 bg-white text-black rounded-md shadow-lg py-2">
+              <div className="absolute right-0 mt-0 hidden group-hover:block w-40 bg-white text-black rounded-md shadow-lg py-2">
                 <p className="px-4 py-2 text-sm font-medium text-gray-700">
                   {session.user.name || "User"} {/* fallback name */}
                 </p>
@@ -82,8 +90,15 @@ export default function Header() {
             />
           )}
 
-          <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
-            {isOpen ? <X className="w-7 h-7 text-white" /> : <Menu className="w-7 h-7 text-white" />}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="focus:outline-none"
+          >
+            {isOpen ? (
+              <X className="w-7 h-7 text-white" />
+            ) : (
+              <Menu className="w-7 h-7 text-white" />
+            )}
           </button>
         </div>
       </nav>
@@ -91,14 +106,40 @@ export default function Header() {
       {/* Mobile Nav Dropdown */}
       {isOpen && (
         <div className="md:hidden bg-[#7A0C0C] border-t border-gray-700 px-6 py-4 space-y-4">
-          <Link href="/menu" className="block hover:text-[#FFA500] transition" onClick={() => setIsOpen(false)}>Menu</Link>
-          <Link href="/specials" className="block hover:text-[#FFA500] transition" onClick={() => setIsOpen(false)}>Specials</Link>
-          <Link href="/about" className="block hover:text-[#FFA500] transition" onClick={() => setIsOpen(false)}>About Us</Link>
-          <Link href="/contact" className="block hover:text-[#FFA500] transition" onClick={() => setIsOpen(false)}>Contact</Link>
+          <Link
+            href="/menu"
+            className="block hover:text-[#FFA500] transition"
+            onClick={() => setIsOpen(false)}
+          >
+            Menu
+          </Link>
+          <Link
+            href="/specials"
+            className="block hover:text-[#FFA500] transition"
+            onClick={() => setIsOpen(false)}
+          >
+            Specials
+          </Link>
+          <Link
+            href="/about"
+            className="block hover:text-[#FFA500] transition"
+            onClick={() => setIsOpen(false)}
+          >
+            About Us
+          </Link>
+          <Link
+            href="/contact"
+            className="block hover:text-[#FFA500] transition"
+            onClick={() => setIsOpen(false)}
+          >
+            Contact
+          </Link>
 
           {session?.user && (
             <div className="border-t border-gray-700 pt-2">
-              <p className="text-white px-2 py-1">{session.user.name || "User"}</p>
+              <p className="text-white px-2 py-1">
+                {session.user.name || "User"}
+              </p>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
                 className="w-full text-left text-white px-2 py-1 hover:bg-gray-700 rounded"
