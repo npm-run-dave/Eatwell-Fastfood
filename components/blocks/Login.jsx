@@ -1,3 +1,4 @@
+// components/Login.js
 "use client";
 
 import { useState } from "react";
@@ -9,11 +10,13 @@ export default function Login({ onLoginSuccess }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setIsLoading(true);
 
     try {
       const res = await fetch("/api/login", {
@@ -26,22 +29,32 @@ export default function Login({ onLoginSuccess }) {
 
       if (!res.ok) {
         setError(data.error || "Login failed");
+        setIsLoading(false);
         return;
       }
 
-      if (data.token) {
-        localStorage.setItem("accessToken", data.token);
+      // Store user data in localStorage for the header component
+      if (data.user) {
         localStorage.setItem("user", JSON.stringify(data.user));
 
-        // ✅ Update parent Banner immediately
+        // Also store token in localStorage for API requests
+        if (data.token) {
+          localStorage.setItem("accessToken", data.token);
+        }
+
+        // ✅ Update parent component immediately
         if (onLoginSuccess) onLoginSuccess(data.user);
+
+        // Trigger storage event to update other components
+        window.dispatchEvent(new Event("storage"));
       }
 
       // Optional redirect
-      router.replace("/");
+      router.push("/");
     } catch (err) {
       console.error("Login error:", err);
       setError("Something went wrong. Please try again.");
+      setIsLoading(false);
     }
   };
 
@@ -49,8 +62,11 @@ export default function Login({ onLoginSuccess }) {
     // Called after Google or Facebook login
     localStorage.setItem("user", JSON.stringify(user));
 
-    // Update Banner avatar immediately
+    // Update parent component immediately
     if (onLoginSuccess) onLoginSuccess(user);
+
+    // Trigger storage event to update other components
+    window.dispatchEvent(new Event("storage"));
   };
 
   return (
@@ -64,7 +80,9 @@ export default function Login({ onLoginSuccess }) {
         </p>
 
         {error && (
-          <p className="text-red-600 text-sm text-center mt-2">{error}</p>
+          <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
+            {error}
+          </div>
         )}
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-5">
@@ -106,9 +124,10 @@ export default function Login({ onLoginSuccess }) {
 
           <button
             type="submit"
-            className="w-full rounded-lg bg-gradient-to-r from-red-700 via-orange-600 to-red-600 px-6 py-3 text-white font-semibold shadow-md hover:from-red-800 hover:via-orange-700 hover:to-yellow-700 transition"
+            disabled={isLoading}
+            className="w-full rounded-lg bg-gradient-to-r from-red-700 via-orange-600 to-red-600 px-6 py-3 text-white font-semibold shadow-md hover:from-red-800 hover:via-orange-700 hover:to-yellow-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Sign In
+            {isLoading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
@@ -120,14 +139,14 @@ export default function Login({ onLoginSuccess }) {
         </div>
 
         {/* Google + Facebook Login */}
-        <div className="mt-6 flex space-x-4">
+        <div className="mt-6 flex space-x-4 justify-center">
           <LoginGoogle onLoginSuccess={handleSocialLogin} />
           <FacebookLoginButton onLoginSuccess={handleSocialLogin} />
         </div>
 
         {/* Signup Link */}
         <p className="mt-6 text-center text-gray-600 text-sm">
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <a
             href="/Signup"
             className="text-red-600 font-semibold hover:underline"

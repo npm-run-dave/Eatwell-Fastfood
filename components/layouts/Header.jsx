@@ -1,3 +1,4 @@
+// components/Header.js
 "use client";
 
 import Image from "next/image";
@@ -9,39 +10,61 @@ import { useSession, signOut } from "next-auth/react";
 export default function Header() {
   const { data: session } = useSession();
   const [localUser, setLocalUser] = useState(null);
-  const [isOpen, setIsOpen] = useState(false); // mobile menu
+  const [isOpen, setIsOpen] = useState(false);
   const defaultAvatar = "/images/default-avatar.png";
 
   // Load local user and listen for changes
   useEffect(() => {
     const loadUser = () => {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) setLocalUser(JSON.parse(storedUser));
-      else setLocalUser(null);
+      try {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          setLocalUser(JSON.parse(storedUser));
+        } else {
+          setLocalUser(null);
+        }
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        setLocalUser(null);
+      }
     };
 
     loadUser(); // initial load
 
     // Listen for localStorage changes from other tabs or login events
-    window.addEventListener("storage", loadUser);
-    return () => window.removeEventListener("storage", loadUser);
+    const handleStorageChange = (e) => {
+      if (e.key === "user") {
+        loadUser();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    // Also listen for custom events if needed
+    window.addEventListener("userLoggedIn", loadUser);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("userLoggedIn", loadUser);
+    };
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("user");
     setLocalUser(null);
-    signOut({ callbackUrl: "/" }); // logs out NextAuth too
+
+    window.dispatchEvent(new Event("storage"));
+
+    signOut({ callbackUrl: "/" });
   };
 
-  // Avatar + name
   const avatar = session?.user?.image || localUser?.image || defaultAvatar;
   const displayName = session?.user?.name || localUser?.name || "User";
 
   return (
     <header className="bg-gradient-to-r from-[#020202] to-[#3C2424] text-white shadow-md sticky top-0 z-50">
       <nav className="container mx-auto flex justify-between items-center py-3 px-6 md:px-8">
-        {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
             src="/images/Logo.png"
@@ -52,7 +75,6 @@ export default function Header() {
           />
         </Link>
 
-        {/* Desktop Menu */}
         <ul className="hidden md:flex space-x-8 text-base font-medium items-center">
           <li>
             <Link href="/Menus" className="hover:text-[#FFA500] transition">
@@ -77,7 +99,7 @@ export default function Header() {
 
           {(session || localUser) && (
             <li className="relative group">
-              <button className="focus:outline-none">
+              <button className="focus:outline-none flex items-center">
                 <Image
                   src={avatar}
                   alt="profile"
@@ -85,9 +107,10 @@ export default function Header() {
                   height={36}
                   className="w-9 h-9 rounded-full border border-gray-300 object-cover"
                 />
+                <span className="ml-2 text-sm">{displayName}</span>
               </button>
-              <div className="absolute right-0 mt-0 hidden group-hover:block w-40 bg-white text-black rounded-md shadow-lg py-2">
-                <p className="px-4 py-2 text-sm font-medium text-gray-700">
+              <div className="absolute right-0 mt-2 hidden group-hover:block w-48 bg-white text-black rounded-md shadow-lg py-2 z-50">
+                <p className="px-4 py-2 text-sm font-medium text-gray-700 border-b">
                   {displayName}
                 </p>
                 <button
@@ -104,7 +127,7 @@ export default function Header() {
         {/* Mobile Menu Toggle */}
         <div className="md:hidden flex items-center space-x-4">
           {(session || localUser) && (
-            <>
+            <div className="flex items-center space-x-2">
               <Image
                 src={avatar}
                 alt="profile"
@@ -113,7 +136,7 @@ export default function Header() {
                 className="w-8 h-8 rounded-full border border-gray-300 object-cover"
               />
               <span className="text-sm font-medium">{displayName}</span>
-            </>
+            </div>
           )}
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -131,16 +154,32 @@ export default function Header() {
       {/* Mobile Menu Drawer */}
       {isOpen && (
         <div className="md:hidden bg-[#3C2424] text-white px-6 py-4 space-y-3">
-          <Link href="/Menus" onClick={() => setIsOpen(false)}>
+          <Link
+            href="/Menus"
+            className="block py-2 hover:text-[#FFA500]"
+            onClick={() => setIsOpen(false)}
+          >
             Menu
           </Link>
-          <Link href="/specials" onClick={() => setIsOpen(false)}>
+          <Link
+            href="/specials"
+            className="block py-2 hover:text-[#FFA500]"
+            onClick={() => setIsOpen(false)}
+          >
             Specials
           </Link>
-          <Link href="/about" onClick={() => setIsOpen(false)}>
+          <Link
+            href="/about"
+            className="block py-2 hover:text-[#FFA500]"
+            onClick={() => setIsOpen(false)}
+          >
             About Us
           </Link>
-          <Link href="/contact" onClick={() => setIsOpen(false)}>
+          <Link
+            href="/contact"
+            className="block py-2 hover:text-[#FFA500]"
+            onClick={() => setIsOpen(false)}
+          >
             Contact
           </Link>
 
@@ -150,7 +189,7 @@ export default function Header() {
                 handleLogout();
                 setIsOpen(false);
               }}
-              className="block w-full text-left px-4 py-2 rounded-md bg-red-600 hover:bg-red-700 mt-3"
+              className="block w-full text-left py-2 rounded-md text-red-400 hover:text-red-300 mt-3"
             >
               Sign Out
             </button>
