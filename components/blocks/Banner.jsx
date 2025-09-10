@@ -126,20 +126,6 @@ export default function Banner() {
               </button>
 
               {/* Show avatar + name if logged in */}
-              {(session || localUser) && (
-                <div className="mt-6 flex flex-col items-center">
-                  <Image
-                    src={avatar}
-                    alt="profile"
-                    width={48}
-                    height={48}
-                    className="w-12 h-12 rounded-full border-2 border-white shadow-md object-cover"
-                  />
-                  <span className="mt-2 text-sm font-medium">
-                    {displayName}
-                  </span>
-                </div>
-              )}
             </div>
           </div>
         ))}
