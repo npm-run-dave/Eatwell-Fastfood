@@ -138,13 +138,11 @@ export default function Login({ onLoginSuccess }) {
           <span className="w-full border-t border-gray-300"></span>
         </div>
 
-        {/* Google + Facebook Login */}
         <div className="mt-6 flex space-x-4 justify-center">
           <LoginGoogle onLoginSuccess={handleSocialLogin} />
           <FacebookLoginButton onLoginSuccess={handleSocialLogin} />
         </div>
 
-        {/* Signup Link */}
         <p className="mt-6 text-center text-gray-600 text-sm">
           Don't have an account?{" "}
           <a

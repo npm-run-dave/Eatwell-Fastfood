@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+
 export default function Menu() {
   const dishes = [
     {
@@ -7,71 +9,99 @@ export default function Menu() {
       price: "$24.99",
       desc: "Fresh shrimp sautéed in garlic butter with herbs",
       image:
-        "https://getfish.com.au/cdn/shop/articles/Step_3_-_Octopus_cd435b57-81c6-41fe-a8ed-1c78d12a7ada.png?v=1739324920",
+        "https://png.pngtree.com/png-clipart/20250314/original/pngtree-tasty-shrimp-plate-png-image_19280373.png",
+      rating: 5,
     },
     {
       title: "Grilled Salmon",
       price: "$29.99",
       desc: "Salmon fillet served with lemon dill sauce",
       image:
-        "https://www.recipetineats.com/tachyon/2023/02/Crispy-baby-octopus_3-square.jpg",
+        "https://fishing-friends.com/wp-content/uploads/2023/01/product-12.png",
+      rating: 4,
     },
     {
       title: "Crispy Calamari",
       price: "$21.99",
       desc: "Golden fried calamari rings with aioli dip",
       image:
-        "https://www.unicornsinthekitchen.com/wp-content/uploads/2021/12/Mediterranean-style-shrimp-recipe.jpg",
-    },
-    {
-      title: "Lobster Thermidor",
-      price: "$39.99",
-      desc: "Classic French lobster with creamy mustard sauce",
-      image:
-        "https://beyondsweetandsavory.com/wp-content/uploads/2022/02/Gambas-al-ajillo-VyTran-3-500x500.jpg",
-    },
-    {
-      title: "Seared Tuna Steak",
-      price: "$27.99",
-      desc: "Fresh tuna steak seared rare with sesame crust",
-      image:
-        "https://dinkoseafoods.com.au/wp-content/uploads/2023/05/Dinko-Seafoods-Asian-Seared-Tuna.jpg",
+        "https://png.pngtree.com/png-clipart/20250314/original/pngtree-tasty-shrimp-plate-png-image_19280373.png",
+      rating: 4,
     },
   ];
 
   return (
-    <section className="px-6 lg:px-16 py-16 bg-gradient-to-b from-[#7A0005] to-black min-h-screen">
-      <div className="text-center mb-12">
-        <h1 className="text-5xl font-bold text-white tracking-wide drop-shadow-lg">
-          Taste Our Seafood Specials
-        </h1>
-        <p className="mt-2 text-[#D3651D] font-medium">Fresh & Delicious</p>
-      </div>
+    <section className="relative px-6 lg:px-16 py-16 bg-gradient-to-b from-[#7A0005] to-black min-h-screen overflow-hidden">
+      {/* Background Overlay */}
+      <div
+        className="absolute inset-0 bg-[url('https://img.freepik.com/premium-photo/dirty-orange-yellow-watercolor-painting-paper-background_62890-554.jpg')] bg-cover bg-center opacity-20"
+        style={{ mixBlendMode: "overlay" }}
+      ></div>
 
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {dishes.map((dish, idx) => (
-          <div
-            key={idx}
-            className="bg-white rounded-2xl shadow-lg overflow-hidden border-2 border-[#D3651D] hover:scale-105 hover:shadow-2xl transition transform"
-          >
-            <img
-              src={dish.image}
-              alt={dish.title}
-              className="w-full h-56 object-cover"
-            />
-            <div className="p-5">
-              <div className="flex justify-between items-center mb-2">
-                <h2 className="text-lg font-semibold text-[#7A0005]">
-                  {dish.title}
-                </h2>
-                <span className="text-sm font-bold text-[#D3651D]">
-                  {dish.price}
-                </span>
+      <div className="relative z-10">
+        {/* Section Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold text-white tracking-wide drop-shadow-lg">
+            Our Top Menu
+          </h1>
+          <p className="mt-3 text-gray-200 max-w-2xl mx-auto">
+            Discover our chef’s top picks, crafted with the freshest seafood and
+            bold flavors. Each dish is designed to delight your taste buds and
+            make every bite unforgettable.
+          </p>
+          <button className="mt-6 px-6 py-2 border border-white text-white rounded-lg hover:bg-white hover:text-[#7A0005] transition">
+            View More
+          </button>
+        </div>
+
+        {/* Dish Cards */}
+        <div className="grid gap-12 md:grid-cols-3 max-w-6xl mx-auto">
+          {dishes.map((dish, idx) => (
+            <div key={idx} className="text-center">
+              {/* Rotating Dish */}
+              <div className="w-56 h-56 mx-auto rounded-full overflow-hidden shadow-lg border-4 border-white animate-[spin_30s_linear_infinite]">
+                <Image
+                  src={dish.image}
+                  alt={dish.title}
+                  width={224} // 56 * 4 (tailwind rem -> px)
+                  height={224}
+                  className="w-full h-full object-cover"
+                  priority={idx === 0} // preload first dish
+                />
               </div>
-              <p className="text-gray-600 text-sm">{dish.desc}</p>
+
+              <h2 className="mt-6 text-xl font-semibold text-white">
+                {dish.title}
+              </h2>
+              <p className="mt-2 text-gray-300 text-sm px-4">{dish.desc}</p>
+
+              {/* Rating Stars */}
+              <div className="flex justify-center mt-3">
+                {Array.from({ length: 5 }, (_, i) => (
+                  <svg
+                    key={i}
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill={i < dish.rating ? "#FFD700" : "none"}
+                    viewBox="0 0 24 24"
+                    stroke="#FFD700"
+                    className="w-5 h-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={1.5}
+                      d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.402c.494.036.695.66.318.993l-4.208 3.602a.563.563 0 00-.182.557l1.286 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L7.47 20.504a.562.562 0 01-.84-.61l1.287-5.385a.563.563 0 00-.183-.557L3.526 10.35c-.377-.333-.176-.957.318-.993l5.518-.402a.563.563 0 00.475-.345l2.125-5.111z"
+                    />
+                  </svg>
+                ))}
+              </div>
+
+              <p className="mt-3 text-[#D3651D] font-bold text-lg">
+                {dish.price}
+              </p>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

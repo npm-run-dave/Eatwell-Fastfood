@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import Slider from "react-slick";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Login from "../blocks/Login";
-
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -14,6 +14,7 @@ export default function Banner() {
   const [localUser, setLocalUser] = useState(null);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [animateModal, setAnimateModal] = useState(false);
+  const router = useRouter();
 
   const defaultAvatar = "/images/default-avatar.png";
 
@@ -25,7 +26,7 @@ export default function Banner() {
     }
   }, []);
 
-  // Listen for localStorage changes (so avatar updates automatically)
+  // Listen for localStorage changes
   useEffect(() => {
     const handleStorageChange = () => {
       const storedUser = localStorage.getItem("user");
@@ -71,13 +72,13 @@ export default function Banner() {
     },
     {
       id: 2,
-      image: "/seafoodsimages/kingcrab1.png",
+      image: "/seafoodsimages/Kingcrab1.png",
       title: "Fresh & Hot",
       desc: "Handcrafted meals made with fresh local ingredients.",
     },
     {
       id: 3,
-      image: "/seafoodsimages/Octopus.webp",
+      image: "/seafoodsimages/octopus.webp",
       title: "Eat Well, Live Well",
       desc: "A unique dining experience for food lovers.",
     },
@@ -87,11 +88,11 @@ export default function Banner() {
     if (!session && !localUser) {
       setShowLoginModal(true);
     } else {
-      console.log("Show menu here or redirect to /Menus");
+      router.push("/Menus"); // ✅ redirect if logged in
     }
   };
 
-  // Decide avatar + name
+  // Decide avatar + name (optional use)
   const avatar = session?.user?.image || localUser?.image || defaultAvatar;
   const displayName = session?.user?.name || localUser?.name || "User";
 
@@ -124,13 +125,10 @@ export default function Banner() {
               >
                 Order Now
               </button>
-
-              {/* Show avatar + name if logged in */}
             </div>
           </div>
         ))}
       </Slider>
-
       {/* Login Modal */}
       {showLoginModal && !session && !localUser && (
         <div

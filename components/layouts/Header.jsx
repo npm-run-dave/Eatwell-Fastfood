@@ -67,7 +67,7 @@ export default function Header() {
       <nav className="container mx-auto flex justify-between items-center py-3 px-6 md:px-8">
         <Link href="/" className="flex items-center">
           <Image
-            src="/images/Logo.png"
+            src="/images/logo.png"
             alt="Eat Well Logo"
             width={140}
             height={140}
@@ -109,7 +109,7 @@ export default function Header() {
                 />
                 <span className="ml-2 text-sm">{displayName}</span>
               </button>
-              <div className="absolute right-0 mt-2 hidden group-hover:block w-48 bg-white text-black rounded-md shadow-lg py-2 z-50">
+              <div className="absolute right-0 mt-1 hidden group-hover:block w-48 bg-white text-black rounded-md shadow-lg py-2 z-50">
                 <p className="px-4 py-2 text-sm font-medium text-gray-700 border-b">
                   {displayName}
                 </p>
@@ -124,20 +124,7 @@ export default function Header() {
           )}
         </ul>
 
-        {/* Mobile Menu Toggle */}
         <div className="md:hidden flex items-center space-x-4">
-          {(session || localUser) && (
-            <div className="flex items-center space-x-2">
-              <Image
-                src={avatar}
-                alt="profile"
-                width={32}
-                height={32}
-                className="w-8 h-8 rounded-full border border-gray-300 object-cover"
-              />
-              <span className="text-sm font-medium">{displayName}</span>
-            </div>
-          )}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="focus:outline-none"
@@ -151,7 +138,6 @@ export default function Header() {
         </div>
       </nav>
 
-      {/* Mobile Menu Drawer */}
       {isOpen && (
         <div className="md:hidden bg-[#3C2424] text-white px-6 py-4 space-y-3">
           <Link
@@ -182,14 +168,25 @@ export default function Header() {
           >
             Contact
           </Link>
-
+          {(session || localUser) && (
+            <div className="flex items-center space-x-2">
+              <Image
+                src={avatar}
+                alt="profile"
+                width={32}
+                height={32}
+                className="w-8 h-8 rounded-full border border-gray-300 object-cover"
+              />
+              <span className="text-sm font-medium">{displayName}</span>
+            </div>
+          )}
           {(session || localUser) && (
             <button
               onClick={() => {
                 handleLogout();
                 setIsOpen(false);
               }}
-              className="block w-full text-left py-2 rounded-md text-red-400 hover:text-red-300 mt-3"
+              className="block w-full text-left py-2 rounded-md text-red-400 hover:text-red-300 "
             >
               Sign Out
             </button>
