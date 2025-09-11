@@ -1,10 +1,9 @@
 "use client";
 import { SessionProvider } from "next-auth/react";
-import Widget from "@/components/icons/widget";
 import Header from "@/components/layouts/Header";
 import Footer from "@/components/layouts/Footer";
+import Chatbot from "@/components/blocks/Chatbot";
 import "./globals.css";
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -13,8 +12,7 @@ export default function RootLayout({ children }) {
           <Header />
 
           <main className="min-h-screen">{children}</main>
-          <Widget />
-
+          <Chatbot />
           <Footer />
         </SessionProvider>
       </body>

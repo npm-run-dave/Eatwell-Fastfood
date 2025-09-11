@@ -13,7 +13,6 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const defaultAvatar = "/images/default-avatar.png";
 
-  // Load local user and listen for changes
   useEffect(() => {
     const loadUser = () => {
       try {
@@ -29,9 +28,8 @@ export default function Header() {
       }
     };
 
-    loadUser(); // initial load
+    loadUser();
 
-    // Listen for localStorage changes from other tabs or login events
     const handleStorageChange = (e) => {
       if (e.key === "user") {
         loadUser();
@@ -40,7 +38,6 @@ export default function Header() {
 
     window.addEventListener("storage", handleStorageChange);
 
-    // Also listen for custom events if needed
     window.addEventListener("userLoggedIn", loadUser);
 
     return () => {
@@ -77,7 +74,7 @@ export default function Header() {
 
         <ul className="hidden md:flex space-x-8 text-base font-medium items-center">
           <li>
-            <Link href="/Menus" className="hover:text-[#FFA500] transition">
+            <Link href="/" className="hover:text-[#FFA500] transition">
               Menu
             </Link>
           </li>
