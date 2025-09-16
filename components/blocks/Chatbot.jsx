@@ -87,7 +87,7 @@ export default function ChatWidget() {
     <div>
       <button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 right-6 bg-gradient-to-r from-amber-600 to-orange-700 text-[#875102] p-4 rounded-full shadow-lg hover:scale-110 transition-transform duration-200 z-50 "
+        className="fixed bottom-6 right-6 bg-gradient-to-r from-amber-600 to-orange-700 text-[#875102] p-4 rounded-full shadow-lg hover:scale-110 transition-transform duration-200 z-50"
         aria-label="Open chat"
       >
         <svg
@@ -107,7 +107,15 @@ export default function ChatWidget() {
       </button>
 
       {open && (
-        <div className="fixed bottom-24 right-6 w-80  sm:h-[550px] bg-white rounded-xl shadow-xl flex flex-col overflow-hidden border border-gray-300 z-50">
+        <div
+          className="
+            fixed bottom-24 right-0 w-80 sm:h-[550px] 
+            h-[80vh] sm:bottom-24 sm:right-6 
+            bg-white rounded-xl shadow-xl flex flex-col overflow-hidden border border-gray-300 z-50
+            sm:rounded-xl sm:w-80 
+            rounded-none w-full bottom-0 right-0 sm:rounded-xl
+          "
+        >
           <div className="p-4 bg-gradient-to-r from-amber-700 to-orange-800 text-white flex justify-between items-center">
             <div className="flex items-center space-x-3">
               <div className="bg-white p-1.5 rounded-full">
@@ -160,6 +168,7 @@ export default function ChatWidget() {
           >
             {chat.length === 0 && (
               <div className="space-y-4">
+                {/* Welcome + Suggestions */}
                 <div className="text-center py-2">
                   <div className="bg-amber-50 rounded-lg p-4 shadow-sm border border-amber-200">
                     <div className="bg-amber-200 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -186,8 +195,6 @@ export default function ChatWidget() {
                     </p>
                   </div>
                 </div>
-
-                {/* Suggestions */}
                 <div className="space-y-2">
                   <p className="text-xs text-gray-500 text-center">
                     Try asking:
@@ -215,9 +222,9 @@ export default function ChatWidget() {
                 }`}
               >
                 <div
-                  className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm  ${
+                  className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm break-words whitespace-pre-wrap ${
                     msg.role === "user"
-                      ? "bg-gradient-to-r from-amber-600 to-orange-600 text-[#875102] rounded-br-none shadow "
+                      ? "bg-gradient-to-r from-amber-600 to-orange-600 text-[#875102] rounded-br-none shadow"
                       : "bg-amber-100 text-amber-900 border border-amber-200 rounded-bl-none shadow-sm"
                   }`}
                 >

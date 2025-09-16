@@ -27,7 +27,10 @@ export async function POST(req) {
   try {
     const { name, email, password } = await req.json();
     if (!name || !email || !password) {
-      return NextResponse.json({ ok: false, error: "All fields are required" }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, error: "All fields are required" },
+        { status: 400 }
+      );
     }
 
     const client = await clientPromise;
@@ -37,7 +40,10 @@ export async function POST(req) {
     const usersCollection = db.collection("users");
     const existingUser = await usersCollection.findOne({ email });
     if (existingUser) {
-      return NextResponse.json({ ok: false, error: "Email already exists" }, { status: 409 });
+      return NextResponse.json(
+        { ok: false, error: "Email already exists" },
+        { status: 409 }
+      );
     }
 
     // 2️⃣ Generate OTP
@@ -58,6 +64,9 @@ export async function POST(req) {
     return NextResponse.json({ ok: true, message: "OTP sent to email" });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: error.message },
+      { status: 500 }
+    );
   }
 }
