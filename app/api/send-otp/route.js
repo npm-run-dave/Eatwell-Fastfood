@@ -36,7 +36,6 @@ export async function POST(req) {
     const client = await clientPromise;
     const db = client.db("seafooddb");
 
-    // 1️⃣ Check if user already exists
     const usersCollection = db.collection("users");
     const existingUser = await usersCollection.findOne({ email });
     if (existingUser) {
@@ -46,11 +45,9 @@ export async function POST(req) {
       );
     }
 
-    // 2️⃣ Generate OTP
     const otp = generateOTP();
     const expiresAt = Date.now() + 5 * 60 * 1000;
 
-    // 3️⃣ Save OTP in temp collection
     const otpCollection = db.collection("otp_verifications");
     await otpCollection.updateOne(
       { email },
@@ -58,7 +55,6 @@ export async function POST(req) {
       { upsert: true }
     );
 
-    // 4️⃣ Send OTP
     await sendOTP(email, otp);
 
     return NextResponse.json({ ok: true, message: "OTP sent to email" });

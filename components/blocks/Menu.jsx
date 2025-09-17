@@ -37,14 +37,12 @@ export default function Menu() {
 
   return (
     <section className="relative px-6 lg:px-16 py-16 bg-gradient-to-b from-[#7A0005] to-black min-h-screen overflow-hidden">
-      {/* Background Overlay */}
       <div
         className="absolute inset-0 bg-[url('https://img.freepik.com/premium-photo/dirty-orange-yellow-watercolor-painting-paper-background_62890-554.jpg')] bg-cover bg-center opacity-20"
         style={{ mixBlendMode: "overlay" }}
       ></div>
 
       <div className="relative z-10 flex gap-12">
-        {/* Main Dishes Grid */}
         <div className="flex-1">
           <div className="text-center mb-12">
             <h1 className="text-5xl font-bold text-white tracking-wide drop-shadow-lg">
@@ -108,7 +106,7 @@ export default function Menu() {
                 <button
                   onClick={() => {
                     setSelectedDish(dish);
-                    setQuantity(1); // reset quantity
+                    setQuantity(1);
                   }}
                   className="mt-4 px-5 py-2 bg-[#D3651D] text-white rounded-lg hover:bg-[#a54b14] transition shadow-md"
                 >
@@ -119,15 +117,12 @@ export default function Menu() {
           </div>
         </div>
 
-        {/* Side Panel */}
-        {/* Side Panel */}
         <div
           className={`fixed bottom-[100px] right-0 h-[750px] w-80 bg-[#FFF7F0] shadow-2xl transform transition-all duration-500 ease-in-out 
   ${selectedDish ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"}`}
         >
           {selectedDish && (
             <div className="flex flex-col h-full">
-              {/* Header / Balance Card (Demo) */}
               <div className="bg-[#FF7A00] text-white rounded-b-2xl p-6 shadow-md">
                 <h2 className="text-sm">Your Balance</h2>
                 <p className="text-3xl font-bold mt-1">$12,000</p>
