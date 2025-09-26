@@ -60,7 +60,7 @@ export default function Header() {
   const displayName = session?.user?.name || localUser?.name || "User";
 
   return (
-    <header className="bg-gradient-to-r from-[#020202] to-[#3C2424] text-white shadow-md sticky top-0 z-50">
+    <header className="bg-gradient-to-r from-[#020202] to-[#3C2424] text-white shadow-md  top-0 z-50 sticky">
       <nav className="container mx-auto flex justify-between items-center py-3 px-6 md:px-8">
         <Link href="/" className="flex items-center">
           <Image
